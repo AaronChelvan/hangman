@@ -14,7 +14,6 @@ int main (int argc, char * argv[]) {
    char *word = "antidisestablishmentarianism";
    printLines(word);
    int solvedStatus = FALSE;
-   //int lengthOfWord = strlen(word);
    int solvedArray[(int)strlen(word)];
    
    //Fill solvedArray with zeroes.
@@ -34,9 +33,6 @@ int main (int argc, char * argv[]) {
       printf("Enter a letter:\n");
       char letter = NULL;
       scanf("%c", &letter);
-      /*int *buffer = calloc((strlen(word)), sizeof(int));
-      int *returnedArray = checkForLetter (letter, word, buffer);*/
-      //printArray(word, returnedArray, letter);
       
       counter = 0;
       while (counter < strlen(word)) {
@@ -57,8 +53,6 @@ int main (int argc, char * argv[]) {
          }
          counter++;
       }
-      
-      //free(buffer);
       
       //Count how many letters have been found.
       int solvedLetters = 0;
