@@ -8,12 +8,15 @@
 #define TRUE 1
 #define FALSE 0
 
-void printLines(char *input);
+void printIntro (void);
+void printLines (char *input);
+void printImage (int mistakes);
 
 int main (int argc, char * argv[]) {
    char *word = "antidisestablishmentarianism";
    printLines(word);
    int solvedStatus = FALSE;
+   int mistakes = 0;
    
    int solvedArray[(int)strlen(word)];
    //Fill solvedArray with zeroes
@@ -30,12 +33,16 @@ int main (int argc, char * argv[]) {
       checkArray[counter] = 0;
       counter++;
    }
+
+   printIntro();
    
-   while (solvedStatus == FALSE) {
+   while ((solvedStatus == FALSE) && (mistakes < 7)) {
+      printf("=========================================\n");
       printf("Enter a letter: ");
       char letter = NULL;
       scanf(" %c", &letter);
       
+      int unsolvedLetters = 0;
       //Check if 'letter' is in 'word'
       counter = 0;
       while (counter < strlen(word)) {
@@ -43,16 +50,24 @@ int main (int argc, char * argv[]) {
             checkArray[counter] = 1;
          } else {
             checkArray[counter] = 0;
+            unsolvedLetters++;
          }
          counter++;
       }
+
+      if (unsolvedLetters == strlen(word)) {
+         mistakes++;
+      }
+      printf("Number of mistakes: %d\n", mistakes);
+      printImage(mistakes);
 
       //solvedArray contains a number for each letter in 'word'
       //0 = that letter has not yet been guessed by the user
       //1 = that letter has been guessed by the user
       counter = 0;
       while (counter < strlen(word)) {
-         if ((checkArray[counter] == 0) && (solvedArray[counter] == 0)){
+         if ((checkArray[counter] == 0) &&
+             (solvedArray[counter] == 0)){
             solvedArray[counter] = 0;
          } else {
             solvedArray[counter] = 1;
@@ -96,8 +111,26 @@ int main (int argc, char * argv[]) {
       printf("\n");  
       printf("\n");   
    }
-   printf("YOU WIN!\n");
+
+   if (mistakes == 7) {
+      printf("YOU LOSE!\n\n");
+   } else {
+      printf("YOU WIN!\n\n");
+   }
+   
    return EXIT_SUCCESS;
+}
+
+void printIntro (void) {
+   printf("=========================================\n");
+   printf("|  |  __         ___            __          \n");
+   printf("|__| |  | |\\  | |     |\\    /| |  | |\\  |\n");
+   printf("|  | |__| | \\ | | __  | \\  / | |__| | \\ |\n");
+   printf("|  | |  | |  \\| |___| |  \\/  | |  | |  \\|\n");
+   printf("=========================================\n");
+   printf("\n");
+   printf("Guess the word in less than 7 mistakes to win.\n");
+   printf("\n");
 }
 
 void printLines(char *input) {
@@ -107,4 +140,80 @@ void printLines(char *input) {
       counter ++;
    }
    printf("\n");
+}
+
+void printImage (int mistakes) {
+   if (mistakes == 0) {
+      printf("-----------------------------\n");
+      printf("     |                       \n");
+      printf("     |                       \n");
+      printf("     |                       \n");
+      printf("     |                       \n");
+      printf("     |                       \n");
+      printf("     |                       \n");
+      printf("-----------------------------\n");
+   } else if (mistakes == 1) {
+      printf("-----------------------------\n");
+      printf("     |            |          \n");
+      printf("     |                       \n");
+      printf("     |                       \n");
+      printf("     |                       \n");
+      printf("     |                       \n");
+      printf("     |                       \n");
+      printf("-----------------------------\n");
+   } else if (mistakes == 2) {
+      printf("-----------------------------\n");
+      printf("     |            |          \n");
+      printf("     |            O          \n");
+      printf("     |                       \n");
+      printf("     |                       \n");
+      printf("     |                       \n");
+      printf("     |                       \n");
+      printf("-----------------------------\n");
+   } else if (mistakes == 3) {
+      printf("-----------------------------\n");
+      printf("     |            |          \n");
+      printf("     |            O          \n");
+      printf("     |            |          \n");
+      printf("     |                       \n");
+      printf("     |                       \n");
+      printf("     |                       \n");
+      printf("-----------------------------\n");
+   } else if (mistakes == 4) {
+      printf("-----------------------------\n");
+      printf("     |            |          \n");
+      printf("     |            O          \n");
+      printf("     |           -|          \n");
+      printf("     |                       \n");
+      printf("     |                       \n");
+      printf("     |                       \n");
+      printf("-----------------------------\n");
+   } else if (mistakes == 5) {
+      printf("-----------------------------\n");
+      printf("     |            |          \n");
+      printf("     |            O          \n");
+      printf("     |           -|-         \n");
+      printf("     |                       \n");
+      printf("     |                       \n");
+      printf("     |                       \n");
+      printf("-----------------------------\n");
+   } else if (mistakes == 6) {
+      printf("-----------------------------\n");
+      printf("     |            |          \n");
+      printf("     |            O          \n");
+      printf("     |           -|-         \n");
+      printf("     |           /           \n");
+      printf("     |                       \n");
+      printf("     |                       \n");
+      printf("-----------------------------\n");
+   } else if (mistakes == 7) {
+      printf("-----------------------------\n");
+      printf("     |            |          \n");
+      printf("     |            O          \n");
+      printf("     |           -|-         \n");
+      printf("     |           / \\         \n");
+      printf("     |                       \n");
+      printf("     |                       \n");
+      printf("-----------------------------\n");
+   }
 }
