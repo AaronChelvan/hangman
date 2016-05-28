@@ -1,20 +1,33 @@
 // Aaron Chelvan
-// 27/04/16
+// Started on: 27/04/16
+// Most recent update: 28/05/16
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <time.h>
 
 #define TRUE 1
 #define FALSE 0
 
 void printIntro (void);
-void printLines (char *input);
 void printImage (int mistakes);
 
 int main (int argc, char * argv[]) {
-   char *word = "antidisestablishmentarianism";
-   printLines(word);
+   //Randomly choose a word from the list
+   srand(time(NULL));
+   int wordNum = rand()%4;
+   char *wordList[10];
+   wordList[0] = "dog"; 
+   wordList[1] = "cat";
+   wordList[2] = "giraffe";
+   wordList[3] = "elephant";
+   wordList[4] = "hippopotamus";
+   wordList[5] = "jaguar";
+   wordList[6] = "rhinoceros";
+   wordList[7] = "crocodile";
+   char *word = wordList[wordNum];
+
    int solvedStatus = FALSE;
    int mistakes = 0;
    
@@ -38,7 +51,9 @@ int main (int argc, char * argv[]) {
    
    while ((solvedStatus == FALSE) && (mistakes < 7)) {
       printf("=========================================\n");
+      printf("The word contains %d letters.\n", (int)strlen(word));
       printf("Enter a letter: ");
+      
       char letter = NULL;
       scanf(" %c", &letter);
       
@@ -130,15 +145,6 @@ void printIntro (void) {
    printf("=========================================\n");
    printf("\n");
    printf("Guess the word in less than 7 mistakes to win.\n");
-   printf("\n");
-}
-
-void printLines(char *input) {
-   int counter = 0;
-   while (counter < strlen(input)) {
-      printf("_ ");
-      counter ++;
-   }
    printf("\n");
 }
 
