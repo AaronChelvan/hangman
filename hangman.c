@@ -42,125 +42,151 @@ int main (int argc, char * argv[]) {
       //Check if the inputted string contains only lowercase letters
       if (checkLowercase(inputString) == TRUE) {
          //Copy the inputted string into the word bank
-         int counter2 = 0;
+         int counter2;
          for (counter2 = 0; counter2 < MAX_WORD_LENGTH; counter2++) {
             wordList[counter][counter2] = inputString[counter2];
          }
          counter++;
          printf("\n");
       } else {
-         printf("Invalid input. Try again.\n");
-         printf("\n");
+         printf("Invalid input. Try again.\n\n");
          continue;
       }
    }
 
-   //Randomly choose a word from the list
-   srand(time(NULL));
-   int wordNum = rand()%numOfWords;
-   char *word = &wordList[wordNum][0];
+   int replay = TRUE;
+   while (replay == TRUE) {
+      //Randomly choose a word from the list
+      srand(time(NULL));
+      int wordNum = (int)(rand()%numOfWords);
+      char *word = &wordList[wordNum][0];
 
-   int solvedStatus = FALSE;
-   int mistakes = 0;
-   
-   //solvedArray contains a number for each letter in the word
-   //0 = that letter has not yet been guessed by the user
-   //1 = that letter has been guessed by the user
-   //E.g. If the word is 'apple' and the user has guessed
-   //'p' and 'a' so far, solvedArray would be: [1,1,1,0,0]
-   int solvedArray[(int)strlen(word)];
-   //Fill solvedArray with zeroes
-   for (counter = 0; counter < strlen(word); counter++) {
-      solvedArray[counter] = 0;
-   }
-
-   //checkArray contains a number for each letter in the word 
-   //0 = the current letter being guessed is not this letter
-   //1 = the current letter being guessed is this letter
-   //E.g. If the word is 'apple' and the user has guessed
-   //'a' on the previous turn but 'p' this turn, 
-   //checkArray would be: [0,1,1,0,0] (only takes into account
-   //the current guess)
-   int checkArray[(int)strlen(word)];
-   //Fill checkArray with zeroes
-   for (counter = 0; counter < strlen(word); counter++) {
-      checkArray[counter] = 0;
-   }
-
-   printf("Let's Start!\n");
-   
-   while ((solvedStatus == FALSE) && (mistakes < 7)) {
-      printf("=========================================\n");
-      printf("The word contains %d letters.\n", (int)strlen(word));
-      printf("Enter a letter: ");
+      int solvedStatus = FALSE;
+      int mistakes = 0;
       
-      char letter = NULL;
-      scanf(" %c", &letter);
-      
-      int unsolvedLetters = 0;
-      //Check if 'letter' is in 'word'
+      /*solvedArray contains a number for each letter in the word.
+      0 = that letter has not yet been guessed by the user
+      1 = that letter has been guessed by the user
+      E.g. If the word is 'apple' and the user has guessed
+      'p' and 'a' so far, solvedArray would be: [1,1,1,0,0].*/
+      int solvedArray[(int)strlen(word)];
+      //Fill solvedArray with zeroes
       for (counter = 0; counter < strlen(word); counter++) {
-         if (word[counter] == letter) {
-            checkArray[counter] = 1;
-         } else {
-            checkArray[counter] = 0;
-            unsolvedLetters++;
-         }
+         solvedArray[counter] = 0;
       }
 
-      if (unsolvedLetters == strlen(word)) {
-         mistakes++;
-      }
-      printf("Number of mistakes: %d\n", mistakes);
-      printImage(mistakes);
-
-      counter = 0;
-      while (counter < strlen(word)) {
-         if ((checkArray[counter] == 0) &&
-             (solvedArray[counter] == 0)){
-            solvedArray[counter] = 0;
-         } else {
-            solvedArray[counter] = 1;
-         }
-         counter++;
-      }
-      
+      /*checkArray contains a number for each letter in the word. 
+      0 = the current letter being guessed is not this letter
+      1 = the current letter being guessed is this letter
+      E.g. If the word is 'apple' and the user has guessed
+      'a' on the previous turn and 'p' this turn, 
+      checkArray would be: [0,1,1,0,0] (only takes into account
+      the current guess).*/
+      int checkArray[(int)strlen(word)];
       //Fill checkArray with zeroes
       for (counter = 0; counter < strlen(word); counter++) {
          checkArray[counter] = 0;
       }
 
-      //Count how many letters have been found
-      int solvedLetters = 0;  
-      for (counter = 0; counter < strlen(word); counter++) {
-         if (solvedArray[counter] == 1) {
-            solvedLetters++;
+      printf("Let's Start!\n");
+      
+      while ((solvedStatus == FALSE) && (mistakes < 7)) {
+         printf("=========================================\n");
+         printf("The word contains %d letters.\n", (int)strlen(word));
+         printf("Enter a letter: ");
+         
+         /*I used a char array instead of a single char to store the user's
+         input. When I used a single char, that allowed the user to enter multiple
+         letters in a single guess - this needed to be prevented. Using a char array
+         means that if the user enters more than one char, the first char in the array 
+         can be treated as the guess and the others can be ignored.*/
+         char letter[MAX_WORD_LENGTH];
+         scanf(" %s", &letter[0]);
+         printf("You entered: %c\n", letter[0]);
+
+         int unsolvedLetters = 0;
+         //Check if 'letter' is in 'word'
+         for (counter = 0; counter < strlen(word); counter++) {
+            if (word[counter] == letter[0]) {
+               checkArray[counter] = 1;
+            } else {
+               checkArray[counter] = 0;
+               unsolvedLetters++;
+            }
+         }
+
+         if (unsolvedLetters == strlen(word)) {
+            mistakes++;
+         }
+         printf("Number of mistakes: %d\n", mistakes);
+         printImage(mistakes);
+
+         counter = 0;
+         while (counter < strlen(word)) {
+            if ((checkArray[counter] == 0) &&
+                (solvedArray[counter] == 0)){
+               solvedArray[counter] = 0;
+            } else {
+               solvedArray[counter] = 1;
+            }
+            counter++;
+         }
+         
+         //Fill checkArray with zeroes
+         for (counter = 0; counter < strlen(word); counter++) {
+            checkArray[counter] = 0;
+         }
+
+         //Count how many letters have been found
+         int solvedLetters = 0;  
+         for (counter = 0; counter < strlen(word); counter++) {
+            if (solvedArray[counter] == 1) {
+               solvedLetters++;
+            }
+         }
+
+         //Check if all letters have been found
+         if (solvedLetters == strlen(word)) {
+            solvedStatus = TRUE;
+         }
+
+         //Print out the word
+         //'_' represent letters that have not yet been guessed
+         for (counter = 0; counter < strlen(word); counter++) {
+            if (solvedArray[counter] == 0) {
+               printf("_");
+            } else if (solvedArray[counter] == 1) {
+               printf("%c", word[counter]);
+            }
+         }
+         printf("\n\n");
+      }
+
+      if (mistakes == 7) {
+         printf("Correct word was: %s\n", word);
+         printf("YOU LOSE!\n\n");
+      } else {
+         printf("YOU WIN!\n\n");
+      }
+
+      //The user decides if they want to play again, or quit
+      int decided = FALSE;
+      char decision[MAX_WORD_LENGTH];
+      while (decided == FALSE) {
+         printf("Do you want to play again? (y/n)\n");
+         scanf("%s", &decision[0]);
+         if (decision[0] == 'y') {
+            decided = TRUE;
+            replay = TRUE;
+            printf("\n\n");
+         } else if (decision[0] == 'n') {
+            decided = TRUE;
+            replay = FALSE;
+            printf("\n");
+         } else {
+            printf("Invalid input. Try again.\n\n");
          }
       }
-
-      //Check if all letters have been found
-      if (solvedLetters == strlen(word)) {
-         solvedStatus = TRUE;
-      }
-
-      //Print out the word
-      //'_' represent letters that have not yet been guessed
-      for (counter = 0; counter < strlen(word); counter++) {
-         if (solvedArray[counter] == 0) {
-            printf("_");
-         } else if (solvedArray[counter] == 1) {
-            printf("%c", word[counter]);
-         }
-      }
-      printf("\n");  
-      printf("\n");   
-   }
-
-   if (mistakes == 7) {
-      printf("Correct word was: %s\n", word);
-      printf("YOU LOSE!\n\n");
-   } else {
-      printf("YOU WIN!\n\n");
    }
    
    return EXIT_SUCCESS;
